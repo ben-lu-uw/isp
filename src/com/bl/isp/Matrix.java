@@ -1,4 +1,4 @@
-package com.bl.bimp;
+package com.bl.isp;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

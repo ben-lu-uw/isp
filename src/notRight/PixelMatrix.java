@@ -1,6 +1,6 @@
 package notRight;
 
-import com.bl.bimp.ReadImg;
+import com.bl.isp.ReadImg;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

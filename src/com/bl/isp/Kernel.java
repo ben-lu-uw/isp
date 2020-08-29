@@ -1,4 +1,4 @@
-package com.bl.bimp;
+package com.bl.isp;
 
 public class Kernel {
     public int kernelSize(int sigma){

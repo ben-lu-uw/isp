@@ -1,6 +1,6 @@
 package notRight;
 
-import com.bl.bimp.ReadImg;
+import com.bl.isp.ReadImg;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;

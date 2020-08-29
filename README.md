@@ -1,6 +1,5 @@
-# bimp
-Bimp is a stand-alone basic image manipulation program.
-## Features:
-- Chroma key
+# ISP
+ISP is an image simplification program
+## Utilizes:
 - Gaussian blur
 - Outline generation (edge detection)

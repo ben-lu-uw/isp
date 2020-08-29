@@ -1,4 +1,4 @@
-package com.bl.bimp;
+package com.bl.isp;
 
 import static org.junit.jupiter.api.Assertions.*;
 

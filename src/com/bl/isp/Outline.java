@@ -1,4 +1,4 @@
-package com.bl.bimp;
+package com.bl.isp;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

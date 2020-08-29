@@ -1,4 +1,4 @@
-package com.bl.bimp;
+package com.bl.isp;
 
 public class Weight implements Combinable<Weight>{
     private int x;
