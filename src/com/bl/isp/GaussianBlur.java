@@ -72,7 +72,7 @@ public class GaussianBlur {
     public static void main(String[] args) {
         GaussianBlur blur = new GaussianBlur();
         try{
-            blur.applyBlur(3, "C:\\Users\\avtea\\Desktop\\Input\\g.png", "C:\\Users\\avtea\\Desktop\\Output\\b.png");
+            blur.applyBlur(3, "C:\\Users\\avtea\\Downloads\\pic.png", "C:\\Users\\avtea\\Downloads\\picg.png");
         }catch (Exception e){
             System.out.println(e);
         }

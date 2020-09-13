@@ -117,8 +117,8 @@ public class Outline {
     public static void main(String[] args) {
         try{
 
-            Outline.combineOutline("C:\\Users\\avtea\\Desktop\\Output\\a.png",
-                    "C:\\Users\\avtea\\Desktop\\Output\\g.png");
+            Outline.combineOutline("C:\\Users\\avtea\\Downloads\\picg.png",
+                    "C:\\Users\\avtea\\Downloads\\picg2.png");
         }catch (Exception e){
             System.out.println(e);
         }
