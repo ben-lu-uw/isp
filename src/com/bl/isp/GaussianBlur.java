@@ -1,10 +1,6 @@
 package com.bl.isp;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class GaussianBlur {
     public double gaussianFunction(int x, int y, int sigma){
@@ -14,28 +10,25 @@ public class GaussianBlur {
         return weight;
     }
 
-    public void applyBlur(int sigma, String inputPath, String outputPath) throws IOException {
-        ReadImg readImg = new ReadImg();
-        BufferedImage img = readImg.read(inputPath);
-        File file;
+    public static RowMatrix<Pixel> applyBlur(int sigma, RowMatrix<Pixel> rgbMatrix){
 
-        int width = img.getWidth();
-        int height = img.getHeight();
+        RowMatrix<Pixel> rowMatrix = new RowMatrix<>();
+
+        int width = rgbMatrix.getRows().get(0).getCells().size();
+        int height = rgbMatrix.getRows().size();
 
         Kernel k = new Kernel();
 
         int limit = k.kernelMidpoint(sigma);
         int size = k.kernelSize(sigma);
 
-        RowMatrix<Weight> weights = Matrix.weightMatrix(sigma);
-        RowMatrix<Pixel> pixels = Matrix.getAll(inputPath);
+        RowMatrix<Weight> weightMatrix = Matrix.weightMatrix(sigma);
 
         int cutWidth = k.kernelFit(sigma, width);
         int cutHeight = k.kernelFit(sigma, height);
 
-        BufferedImage outputImg = new BufferedImage(cutWidth, cutHeight, BufferedImage.TYPE_3BYTE_BGR);
-
         for (int y = 0; y < cutHeight; y++){
+            Row<Pixel> row = new Row<>();
             for (int x = 0; x < cutWidth; x++){
                 int centerX = limit + x;
                 int centerY = limit + y;
@@ -43,40 +36,30 @@ public class GaussianBlur {
                 int rSum = 0;
                 int gSum = 0;
                 int bSum = 0;
-                int newPixel;
-
-                ArrayList<Row<Weight>> weightRows = weights.getRows();
 
                 for(int yk = 0; yk < size ; yk++){
-                    Row<Weight> weightRow = weightRows.get(yk);
-                    ArrayList<Weight> cells = weightRow.getCells();
-                    ArrayList<Row<Pixel>> pixelRows = pixels.getRows();
                     for (int xk = 0; xk < size; xk++){
-                        Weight cell = cells.get(xk);
+                        Weight cell = weightMatrix.getRows().get(yk).getCells().get(xk);
 
-                        Pixel p = pixelRows.get(centerY + cell.getY()).getCells().get(centerX - cell.getX());
+                        Pixel p = rgbMatrix.getRows().get(centerY + cell.getY()).getCells().get(centerX - cell.getX());
                         rSum += p.getR() * cell.getWeight();
                         gSum += p.getG() * cell.getWeight();
                         bSum += p.getB() * cell.getWeight();
                     }
                 }
-
-                newPixel = (24 << 24)|(rSum << 16)|(gSum << 8)|(bSum);
-                outputImg.setRGB(x, y, newPixel);
+                Pixel pixel = new Pixel(0);
+                pixel.setBit((24 << 24)|(rSum << 16)|(gSum << 8)|(bSum));
+                pixel.setR(rSum);
+                pixel.setG(gSum);
+                pixel.setB(bSum);
+                row.addCell(pixel);
             }
-        }
-        file = new File(outputPath);
-        ImageIO.write(outputImg, "png", file);
-    }
 
-    public static void main(String[] args) {
-        GaussianBlur blur = new GaussianBlur();
-        try{
-            blur.applyBlur(3, "C:\\Users\\avtea\\Downloads\\pic.png", "C:\\Users\\avtea\\Downloads\\picg.png");
-        }catch (Exception e){
-            System.out.println(e);
+            rowMatrix.addRow(row);
         }
 
+        return rowMatrix;
     }
+
 
 }
