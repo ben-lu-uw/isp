@@ -10,6 +10,38 @@ public class GaussianBlur {
         return weight;
     }
 
+    public static RowMatrix<Weight> weightMatrix(int sigma){
+        RowMatrix<Weight> rowMatrix = new RowMatrix<Weight>();
+        GaussianBlur blur = new GaussianBlur();
+        Kernel kernel = new Kernel();
+        int limit = kernel.kernelMidpoint(sigma);
+
+        double sum = 0;
+
+        for (int y = -limit; y <= limit; y++){
+            Row<Weight> row = new Row<Weight>();
+            for (int x = -limit; x<= limit; x++){
+                double weight = blur.gaussianFunction(x, y, sigma);
+                Weight c = new Weight(x, y, weight);
+                c.setX(x);
+                c.setY(y);
+                c.setWeight(weight);
+                row.addCell(c);
+
+                sum += weight;
+            }
+            rowMatrix.addRow(row);
+        }
+
+        for(int y = 0; y <= limit * 2; y++){
+            for(int x = 0; x<= limit * 2; x++){
+                double normalizedWeight = rowMatrix.getRows().get(y).getCells().get(x).getWeight() / sum;
+                rowMatrix.getRows().get(y).getCells().get(x).setWeight(normalizedWeight);
+            }
+        }
+        return rowMatrix;
+    }
+
     public static RowMatrix<Pixel> applyBlur(int sigma, RowMatrix<Pixel> rgbMatrix){
 
         RowMatrix<Pixel> rowMatrix = new RowMatrix<>();
@@ -22,7 +54,7 @@ public class GaussianBlur {
         int limit = k.kernelMidpoint(sigma);
         int size = k.kernelSize(sigma);
 
-        RowMatrix<Weight> weightMatrix = Matrix.weightMatrix(sigma);
+        RowMatrix<Weight> weightMatrix = GaussianBlur.weightMatrix(sigma);
 
         int cutWidth = k.kernelFit(sigma, width);
         int cutHeight = k.kernelFit(sigma, height);

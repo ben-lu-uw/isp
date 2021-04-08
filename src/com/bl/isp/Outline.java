@@ -96,15 +96,15 @@ public class Outline {
     }
 
     public static void combineOutline(String inputPath, String outputPath) throws IOException {
-        ReadImg readImg = new ReadImg();
-        BufferedImage img = readImg.read(inputPath);
+        ReadImage readImage = new ReadImage();
+        BufferedImage img = readImage.read(inputPath);
 
         final int width = img.getWidth();
         final int height = img.getHeight();
 
         File file;
 
-        RowMatrix<Pixel> pixels = Matrix.rgbMatrix(inputPath);
+        RowMatrix<Pixel> pixels = ReadImage.rgbMatrix(inputPath);
         RowMatrix<Pixel> outlineX = drawOutline(pixels, width, height, true);
         RowMatrix<Pixel> outlineY = drawOutline(pixels, width, height, false);
 
