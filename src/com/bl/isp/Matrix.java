@@ -2,13 +2,11 @@ package com.bl.isp;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class Matrix {
 
-    public static RowMatrix<Pixel> getAll(String inputPath) throws IOException {
+    public static RowMatrix<Pixel> rgbMatrix(String inputPath) throws IOException {
         RowMatrix<Pixel> rowMatrix = new RowMatrix<Pixel>();
         ReadImg readImg = new ReadImg();
         BufferedImage img = readImg.read(inputPath);
@@ -47,6 +45,8 @@ public class Matrix {
         Kernel kernel = new Kernel();
         int limit = kernel.kernelMidpoint(sigma);
 
+        double sum = 0;
+
         for (int y = -limit; y <= limit; y++){
             Row<Weight> row = new Row<Weight>();
             for (int x = -limit; x<= limit; x++){
@@ -56,15 +56,19 @@ public class Matrix {
                 c.setY(y);
                 c.setWeight(weight);
                 row.addCell(c);
+
+                sum += weight;
             }
             rowMatrix.addRow(row);
         }
-        return rowMatrix;
-    }
 
-    public static void main(String[] args) {
-        Kernel k = new Kernel();
-        System.out.println(weightMatrix(1));
+        for(int y = 0; y <= limit * 2; y++){
+            for(int x = 0; x<= limit * 2; x++){
+                double normalizedWeight = rowMatrix.getRows().get(y).getCells().get(x).getWeight() / sum;
+                rowMatrix.getRows().get(y).getCells().get(x).setWeight(normalizedWeight);
+            }
+        }
+        return rowMatrix;
     }
 
     /*
@@ -77,35 +81,5 @@ public class Matrix {
     }
 
      */
-
-    public ArrayList rgbMatrix(String inputPath) throws IOException {
-
-        ReadImg readImg = new ReadImg();
-        BufferedImage img = readImg.read(inputPath);
-
-        int width = img.getWidth();
-        int height = img.getHeight();
-
-        ArrayList<ArrayList<ArrayList<Integer>>> arrayList = new ArrayList<>(height);
-
-        for(int y = 0; y < height; y++){
-            arrayList.add(new ArrayList<ArrayList<Integer>>(width));
-
-            for(int x = 0; x < width; x++){
-                int pixel = img.getRGB(x, y);
-                int r = (pixel >> 16)&0xff;
-                int g = (pixel >> 8)&0xff;
-                int b = pixel&0xff;
-                ArrayList<Integer> rgb = new ArrayList<>(Arrays.asList(r, g, b));
-                arrayList.get(y).add(new ArrayList<Integer>(rgb.size()));
-
-                for (int z = 0; z < rgb.size(); z++){
-                    arrayList.get(y).get(x).add(z, rgb.get(z));
-                }
-            }
-        }
-
-        return arrayList;
-    }
 
 }
