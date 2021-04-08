@@ -131,11 +131,4 @@ public class ColourDifference {
                 rT * (deltaCPrime/sC) * (deltaHPrime/sH));
     }
 
-    public static void main(String[] args) {
-
-        double d = deltaE(50,  2.5, 0, 61, -5, 29);
-        System.out.println(d);
-
-    }
-
 }
