@@ -6,6 +6,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/*
+Color based outline generation
+The functions in Edge.java are for proper canny edge detection
+ */
+
 public class Outline {
     public static RowMatrix<Pixel> drawOutline(RowMatrix<Pixel> pixels, int width, int height, Boolean isX) throws IOException {
 
@@ -62,15 +67,19 @@ public class Outline {
                 int g1 = pPrevious.getG();
                 int b1 = pPrevious.getB();
 
-                double d = Math.sqrt(Math.pow(r2 - r1, 2) + Math.pow(g2 - g1, 2) + Math.pow(b2 - b1, 2));
+                double[] lab1 = ConvertColourSpace.rgbToLAB(r1, g1, b1);
+                double[] lab2 = ConvertColourSpace.rgbToLAB(r2, g2, b2);
 
-                if(d > 10){
+                double deltaE = ColourDifference.deltaE(lab1[0], lab1[1], lab1[2], lab2[0], lab2[1], lab2[2]);
+
+                if(deltaE > 3){
                     pixel = (a1 << 24)|(0 << 16)|(0 << 8)|0;
                 }
+
                 else{
                     pixel = (0 << 24)|(0 << 16)|(0 << 8)|0;
                 }
-                //System.out.println(yPrevious);
+
                 Pixel outputPixel = new Pixel(pixel);
                 output.getRows().get(yPrevious).addCell(outputPixel);
 
@@ -95,7 +104,7 @@ public class Outline {
 
         File file;
 
-        RowMatrix<Pixel> pixels = Matrix.getAll(inputPath);
+        RowMatrix<Pixel> pixels = Matrix.rgbMatrix(inputPath);
         RowMatrix<Pixel> outlineX = drawOutline(pixels, width, height, true);
         RowMatrix<Pixel> outlineY = drawOutline(pixels, width, height, false);
 
@@ -106,7 +115,6 @@ public class Outline {
             for(int x = 0; x < width; x++){
                 Pixel pixel = combined.getRows().get(y).getCells().get(x);
                 int p = pixel.getBit();
-                //System.out.println(p);
                 outputImg.setRGB(x, y, p);
             }
         }
@@ -114,13 +122,4 @@ public class Outline {
         ImageIO.write(outputImg, "png", file);
     }
 
-    public static void main(String[] args) {
-        try{
-
-            Outline.combineOutline("C:\\Users\\avtea\\Downloads\\picg.png",
-                    "C:\\Users\\avtea\\Downloads\\picg2.png");
-        }catch (Exception e){
-            System.out.println(e);
-        }
-    }
 }
