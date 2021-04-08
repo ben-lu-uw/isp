@@ -1,7 +1,5 @@
 package com.bl.isp;
 
-import java.io.IOException;
-
 public class GaussianBlur {
     public double gaussianFunction(int x, int y, int sigma){
         double euler = Math.exp(1);
