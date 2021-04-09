@@ -28,21 +28,21 @@ public class Edge {
                 }
 
                 int gx = -1 * (rowMatrix.getRows().get(0).getCells().get(0).getR())
-                        + (rowMatrix.getRows().get(2).getCells().get(0).getR())
-                        + -2 * (rowMatrix.getRows().get(0).getCells().get(1).getR())
-                        + 2 * (rowMatrix.getRows().get(2).getCells().get(1).getR())
-                        + -1 * (rowMatrix.getRows().get(0).getCells().get(2).getR())
+                        + (rowMatrix.getRows().get(0).getCells().get(2).getR())
+                        + -2 * (rowMatrix.getRows().get(1).getCells().get(0).getR())
+                        + 2 * (rowMatrix.getRows().get(1).getCells().get(2).getR())
+                        + -1 * (rowMatrix.getRows().get(2).getCells().get(0).getR())
                         + (rowMatrix.getRows().get(2).getCells().get(2).getR());
 
                 int gy = -1 * (rowMatrix.getRows().get(0).getCells().get(0).getR())
-                        + -2 * (rowMatrix.getRows().get(1).getCells().get(0).getR())
-                        + -1 * (rowMatrix.getRows().get(2).getCells().get(0).getR())
-                        + (rowMatrix.getRows().get(0).getCells().get(2).getR())
-                        + 2 * (rowMatrix.getRows().get(1).getCells().get(2).getR())
+                        + -2 * (rowMatrix.getRows().get(0).getCells().get(1).getR())
+                        + -1 * (rowMatrix.getRows().get(0).getCells().get(2).getR())
+                        + (rowMatrix.getRows().get(2).getCells().get(0).getR())
+                        + 2 * (rowMatrix.getRows().get(2).getCells().get(1).getR())
                         + (rowMatrix.getRows().get(2).getCells().get(2).getR());
 
                 int g = (int) (Math.sqrt(gx * gx + gy * gy));
-                double direction = Math.atan2(gx, gy);
+                double direction = Math.atan2(gy, gx);
                 int roundedDirection = new Gradient().roundedDirection(direction);
 
                 if(maxG < g){
@@ -92,23 +92,23 @@ public class Edge {
                 Gradient g = rowMatrix.getRows().get(y).getCells().get(x);
                 gradient.setStrength(g.isStrong());
 
-                if(direction == 0 & (rowMatrix.getRows().get(y).getCells().get(x - 1).getG() > g.getG()
-                        | rowMatrix.getRows().get(y).getCells().get(x + 1).getG() > g.getG())){
+                if(direction == 0 && (rowMatrix.getRows().get(y).getCells().get(x - 1).getG() > g.getG()
+                        || rowMatrix.getRows().get(y).getCells().get(x + 1).getG() > g.getG())){
                     gradient.setG(0);
                 }
 
-                if(direction == 45 & (rowMatrix.getRows().get(y - 1).getCells().get(x + 1).getG() > g.getG()
-                        | rowMatrix.getRows().get(y + 1).getCells().get(x - 1).getG() > g.getG())){
+                else if(direction == 45 && (rowMatrix.getRows().get(y - 1).getCells().get(x + 1).getG() > g.getG()
+                        || rowMatrix.getRows().get(y + 1).getCells().get(x - 1).getG() > g.getG())){
                     gradient.setG(0);
                 }
 
-                if(direction == 90 & (rowMatrix.getRows().get(y - 1).getCells().get(x).getG() > g.getG()
-                        | rowMatrix.getRows().get(y+ 1).getCells().get(x).getG() > g.getG())){
+                else if(direction == 90 && (rowMatrix.getRows().get(y - 1).getCells().get(x).getG() > g.getG()
+                        || rowMatrix.getRows().get(y+ 1).getCells().get(x).getG() > g.getG())){
                     gradient.setG(0);
                 }
 
-                if(direction == 135 & (rowMatrix.getRows().get(y - 1).getCells().get(x - 1).getG() > g.getG()
-                        | rowMatrix.getRows().get(y + 1).getCells().get(x + 1).getG() > g.getG())){
+                else if(direction == 135 && (rowMatrix.getRows().get(y - 1).getCells().get(x - 1).getG() > g.getG()
+                        || rowMatrix.getRows().get(y + 1).getCells().get(x + 1).getG() > g.getG())){
                     gradient.setG(0);
                 }
 
