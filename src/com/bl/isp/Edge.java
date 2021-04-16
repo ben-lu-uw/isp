@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Edge {
 
     //https://en.wikipedia.org/wiki/Sobel_operator#Formulation
-    public static RowMatrix<Gradient> generate(RowMatrix<Pixel> rgbMatrix) throws IOException {
+    public static RowMatrix<Gradient> generate(RowMatrix<Pixel> rgbMatrix, int upperThreshold, int lowerThreshold) throws IOException {
         RowMatrix<Gradient> gradientRowMatrix = new RowMatrix<Gradient>();
         int height = rgbMatrix.getRows().size() - 1;
         int width = rgbMatrix.getRows().get(0).getCells().size() - 1;
@@ -70,7 +70,7 @@ public class Edge {
                 int normalizedGradient = (int) (gradient.getG() * factor);
                 gradient.setG(normalizedGradient);
 
-                gradient.threshold(gradient);
+                gradient.threshold(gradient, upperThreshold, lowerThreshold);
             }
         }
 

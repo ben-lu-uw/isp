@@ -10,14 +10,14 @@ public class Gradient implements Combinable<Gradient> {
     private double direction;
     private boolean strength;
 
-    public void threshold(Gradient gradient){
+    public void threshold(Gradient gradient, int upper, int lower){
         int value = gradient.getG();
 
-        if(value >= 50){
+        if(value >= upper){
             gradient.setStrength(true);
         }
 
-        else if(value >= 25){
+        else if(value >= lower){
             gradient.setStrength(false);
         }
 

@@ -12,7 +12,7 @@ public class isp {
 
         RowMatrix<Pixel> rgbMatrix = ReadImage.rgbMatrix(inputPath);
         RowMatrix<Pixel> blurredMatrix = GaussianBlur.apply5x5Filter(rgbMatrix);
-        RowMatrix<Gradient> gradientMatrix = Edge.generate(blurredMatrix);
+        RowMatrix<Gradient> gradientMatrix = Edge.generate(blurredMatrix, 50, 20);
         RowMatrix<Gradient> suppressedMatrix = Edge.suppress(gradientMatrix);
         RowMatrix<Gradient> finalMatrix = Edge.trackConnection(suppressedMatrix);
 
