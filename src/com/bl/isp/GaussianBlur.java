@@ -1,5 +1,8 @@
 package com.bl.isp;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class GaussianBlur {
     public double gaussianFunction(int x, int y, int sigma){
         double euler = Math.exp(1);
@@ -91,5 +94,68 @@ public class GaussianBlur {
         return rowMatrix;
     }
 
+    public static RowMatrix<Pixel> apply5x5Filter(RowMatrix<Pixel> rgbMatrix){
+        /*
+        Using a set 5x5 Gaussian filter kernel to convolve the image using a normalizing factor of 1/159
+        [2 4  5  4  2]
+        [4 9  12 9  4]
+        [5 12 15 12 5]
+        [4 9  12 9  4]
+        [2 4  5  4  2]
+         */
+
+        ArrayList<Weight> arrayList0 = new ArrayList<>(Arrays.asList(new Weight(2), new Weight(4), new Weight(5), new Weight(4), new Weight(2)));
+        ArrayList<Weight> arrayList1 = new ArrayList<>(Arrays.asList(new Weight(4), new Weight(9), new Weight(12), new Weight(9), new Weight(4)));
+        ArrayList<Weight> arrayList2 = new ArrayList<>(Arrays.asList(new Weight(5), new Weight(12), new Weight(15), new Weight(12), new Weight(5)));
+
+        RowMatrix<Weight> weightMatrix = new RowMatrix<>();
+        Row<Weight> row0 = new Row<>(); row0.setCells(arrayList0); weightMatrix.addRow(row0);
+        Row<Weight> row1 = new Row<>(); row1.setCells(arrayList1); weightMatrix.addRow(row1);
+        Row<Weight> row2 = new Row<>(); row2.setCells(arrayList2); weightMatrix.addRow(row2);
+        Row<Weight> row3 = new Row<>(); row3.setCells(arrayList1); weightMatrix.addRow(row3);
+        Row<Weight> row4 = new Row<>(); row4.setCells(arrayList0); weightMatrix.addRow(row4);
+
+        int height = rgbMatrix.getRows().size() - 2;
+        int width = rgbMatrix.getRows().get(0).getCells().size() - 2;
+
+        RowMatrix<Pixel> blurredMatrix = new RowMatrix<>();
+
+        for(int y = 2; y < height; y++){
+            Row<Pixel> row = new Row<>();
+            for(int x = 2; x < width; x++){
+
+                int rSum = 0;
+                int gSum = 0;
+                int bSum = 0;
+
+                for(int yk = 0; yk < 5; yk++){
+                    for(int xk = 0; xk < 5; xk++){
+                        double weight = weightMatrix.getRows().get(yk).getCells().get(xk).getWeight();
+                        Pixel p = rgbMatrix.getRows().get(y + yk - 2).getCells().get(x + xk - 2);
+
+                        rSum += p.getR() * weight;
+                        gSum += p.getG() * weight;
+                        bSum += p.getB() * weight;
+
+                    }
+                }
+
+                rSum /= 159;
+                gSum /= 159;
+                bSum /= 159;
+
+                Pixel pixel = new Pixel(0);
+                pixel.setBit((24 << 24)|(rSum << 16)|(gSum << 8)|(bSum));
+                pixel.setR(rSum);
+                pixel.setG(gSum);
+                pixel.setB(bSum);
+
+                row.addCell(pixel);
+
+            }
+            blurredMatrix.addRow(row);
+        }
+        return blurredMatrix;
+    }
 
 }
