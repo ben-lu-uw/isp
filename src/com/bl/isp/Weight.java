@@ -35,6 +35,10 @@ public class Weight implements Combinable<Weight>{
         this.weight = weight;
     }
 
+    public Weight(double weight){
+        this.weight = weight;
+    }
+
     public Weight combine(Weight other){
         return new Weight(this.x, this.y, (this.weight + other.weight)/2);
     }
