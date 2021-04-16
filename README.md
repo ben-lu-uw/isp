@@ -1,16 +1,18 @@
 # ISP
 ISP is an image simplification program.
 
-Currently looking to improve edge detection through the utilization of advanced color space formulas.
-## Utilizes:
-- Gaussian blur
-- Edge detection
+## Features:
+Canny edge detector, uses:
+- 5x5 Gaussian kernel
+- 3x3 Sobel kernel
+- Lower bound cut-off suppression
+- Double thresholding & 8-connectivity blob analysis
+---
+Color-based outline generation, uses:
+- Gaussian Blur
+- RGB to CIELAB color space conversion
+- CIEDE2000 color difference formula
 
-## Example:
-![Source](src/Examples/pic.png)
 
-*Without blur*
-![Without blur](src/Examples/pic2.png)
 
-*With blur*
-![With blur](src/Examples/picg2.png)
+
