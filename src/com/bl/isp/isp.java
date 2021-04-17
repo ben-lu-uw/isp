@@ -7,12 +7,12 @@ import java.io.IOException;
 
 public class isp {
     public static void main(String[] args) throws IOException {
-        String inputPath = "FULL INPUT PATH";
-        String outputPath = "FULL OUTPUT PATH";
+        String inputPath = "C:\\Users\\avtea\\Downloads\\benz.jpg";
+        String outputPath = "C:\\Users\\avtea\\Downloads\\benz.png";
 
         RowMatrix<Pixel> rgbMatrix = ReadImage.rgbMatrix(inputPath);
         RowMatrix<Pixel> blurredMatrix = GaussianBlur.apply5x5Filter(rgbMatrix);
-        RowMatrix<Gradient> gradientMatrix = Edge.generate(blurredMatrix, 50, 20);
+        RowMatrix<Gradient> gradientMatrix = Edge.generate(blurredMatrix, 80, 40);
         RowMatrix<Gradient> suppressedMatrix = Edge.suppress(gradientMatrix);
         RowMatrix<Gradient> finalMatrix = Edge.trackConnection(suppressedMatrix);
 
